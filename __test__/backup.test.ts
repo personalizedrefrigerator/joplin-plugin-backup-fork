@@ -1072,6 +1072,9 @@ describe("Backup", function () {
       backup.passwordEnabled = false;
 
       when(spyOnsSettingsValue)
+        .calledWith("createSubfolderPerProfile")
+        .mockImplementation(() => false);
+      when(spyOnsSettingsValue)
         .calledWith("zipArchive")
         .mockImplementation(() => "no");
       when(spyOnsSettingsValue)
