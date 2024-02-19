@@ -1,7 +1,17 @@
 import * as path from "path";
 import { helper } from "../src/helper";
 
+const resolveMock = jest.spyOn(path, 'resolve');
+// Declare resolve here to prevent StackOverflow
+const posixResolve = path.posix.resolve;
+const win32Resolve = path.win32.resolve;
+
+
 describe("Test helper", function () {
+  beforeEach(() => {
+    resolveMock.mockClear();
+  });
+
   it(`validFileName`, async () => {
     const testCases = [
       {
@@ -167,7 +177,9 @@ describe("Test helper", function () {
   ])(
     "isSubdirectoryOrEqual with POSIX paths (is %s the parent of %s?)",
     (path1, path2, expected) => {
-      expect(helper.isSubdirectoryOrEqual(path1, path2, path.posix)).toBe(
+      resolveMock.mockImplementation((...args) => posixResolve(...args));
+      (path as any).sep = path.posix.sep;
+      expect(helper.isSubdirectoryOrEqual(path1, path2)).toBe(
         expected
       );
     }
@@ -181,7 +193,9 @@ describe("Test helper", function () {
   ])(
     "isSubdirectoryOrEqual with Windows paths (is %s the parent of %s?)",
     (path1, path2, expected) => {
-      expect(helper.isSubdirectoryOrEqual(path1, path2, path.win32)).toBe(
+      resolveMock.mockImplementation((...args) => win32Resolve(...args));
+      (path as any).sep = path.win32.sep;
+      expect(helper.isSubdirectoryOrEqual(path1, path2)).toBe(
         expected
       );
     }

@@ -73,9 +73,6 @@ export namespace helper {
   export function isSubdirectoryOrEqual(
     parent: string,
     possibleChild: string,
-
-    // Testing only
-    pathModule: typeof path = path
   ) {
     // Appending path.sep to handle this case:
     //   parent: /a/b/test
@@ -85,8 +82,8 @@ export namespace helper {
     //
     // Note that .resolve removes trailing slashes.
     //
-    const normalizedParent = pathModule.resolve(parent) + pathModule.sep;
-    const normalizedChild = pathModule.resolve(possibleChild) + pathModule.sep;
+    const normalizedParent = path.resolve(parent) + path.sep;
+    const normalizedChild = path.resolve(possibleChild) + path.sep;
 
     return normalizedChild.startsWith(normalizedParent);
   }
